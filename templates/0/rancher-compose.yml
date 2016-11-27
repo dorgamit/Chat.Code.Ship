@@ -1,0 +1,167 @@
+.catalog:
+  name: "Rocket.Chat.Ops"
+  version: 0.1.0
+  description: |
+    ChatOps Stack made in Docker with Gitlab-CE, Rocket.Chat and Hubot.
+  questions:
+    - variable: "gitlab_hostname"
+      type: string
+      required: true
+      label: "Gitlab service hostname"
+      description: "Gitlab containers hostname, used to directly communicate containers with each other"
+      default: "gitlab"
+    - variable: "gitlab_external_url"
+      type: string
+      required: true
+      label: "Gitlab External URL"
+      description: "URL used to access gitlab interface"
+      default: "http://git.dorgam.it"
+    - variable: "gitlab_ssh_port"
+      type: string
+      required: false
+      label: "Gitlab SSH port"
+      description: "Port used inside container to access Gitlab repository with SSH"
+      default: "22"
+    - variable: "gitlab_lfs_enabled"
+      type: boolean
+      required: false
+      label: "Gitlab enable LFS"
+      description: "Gitlab enable Large File System feature"
+      default: true
+    - variable: "gitlab_listen_port"
+      type: string
+      required: true
+      label: "Gitlab HTTP listen port"
+      description: "The port where gitlab container will be listening"
+      default: "8081"
+    - variable: "gitlab_volume_path"
+      type: string
+      required: false
+      label: "Gitlab Volume Path"
+      description: "The path in the host where gitlab will persist logs, repositories and confs"
+      default: "/home/gitlab"
+    - variable: "runner_hostname"
+      type: string
+      required: false
+      label: "Gitlab-CI Runner Hostname"
+      description: "Gitlab-CI Runner containers hostname, used to directly communicate containers with each other"
+      default: "runner"
+    # - variable: "runner_gitlab_host"
+    #   type: string
+    #   required: false
+    #   label: ""
+    #   description: ""
+    #   default: ""
+    - variable: "mongo_hostname"
+      type: string
+      required: false
+      label: "MongoDB Hostname"
+      description: "MongoDB containers hostname, used to directly communicate containers with each other"
+      default: "mongo"
+    - variable: "mongo_volume_path"
+      type: string
+      required: false
+      label: "MongoDB Volume Path"
+      description: "The path in the host where MongoDB will persist data"
+      default: "/home/mongo"
+    - variable: "rocketchat_hostname"
+      type: string
+      required: false
+      label: "Rocket.Chat Hostname"
+      description: "Rocket.Chat containers hostname, used to directly communicate containers with each other"
+      default: "rocketchat"
+    - variable: "rocketchat_volume_path"
+      type: string
+      required: false
+      label: "Rocket.Chat Volume Path"
+      description: "The path in the host where Rocket.Chat will persist uploaded files"
+      default: "/home/rocketchat"
+    - variable: "rocketchat_port"
+      type: string
+      required: false
+      label: "Rocket.Chat Port"
+      description: ""
+      default: "3000"
+    - variable: "rocketchat_url"
+      type: string
+      required: false
+      label: "Rocket.Chat External URL"
+      description: ""
+      default: "http://chat.dorgam.it"
+    - variable: "rocketchat_mail_url"
+      type: string
+      required: false
+      label: "Rocket.Chat MAIL URL"
+      description: "MAIL_URL environment variable where you can set your SMTP address"
+      default: "/bin/sendmail -f"
+    - variable: "hubot_hostname"
+      type: string
+      required: false
+      label: "Hubot Hostname"
+      description: ""
+      default: "hubot"
+    - variable: "hubot_room"
+      type: string
+      required: false
+      label: "Hubot Listening Channel"
+      description: ""
+      default: "devops"
+    - variable: "hubot_user"
+      type: string
+      required: false
+      label: "Hubot User"
+      description: ""
+      default: "rocket.cat"
+    - variable: "hubot_password"
+      type: string
+      required: false
+      label: "Hubot User password"
+      description: ""
+      default: "1234"
+    - variable: "hubot_name"
+      type: string
+      required: false
+      label: "Hubot User Name"
+      description: ""
+      default: "Rocket.Cat"
+    - variable: "hubot_scripts"
+      type: string
+      required: true
+      label: "Hubot External Scripts"
+      description: ""
+      default: "hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-gitsy,hubot-gitlab-agile"
+    # - variable: "hubot_gitlab_api_url"
+    #   type: string
+    #   required: true
+    #   label: "Hubot Gitlab API URL"
+    #   description: "API Token from Gitlab to enable bot access"
+    #   default: ""
+    - variable: "hubot_gitlab_token"
+      type: string
+      required: true
+      label: "Hubot Gitlab API Token"
+      description: "API Token from Gitlab to enable bot access"
+      default: ""
+    - variable: "hubot_gitlab_records"
+      type: string
+      required: false
+      label: "Hubot max records from Gitlab"
+      description: ""
+      default: "100"
+    - variable: "hubot_volume_path"
+      type: string
+      required: false
+      label: "Hubot Volume Path"
+      description: ""
+      default: "/home/hubot"
+
+gitlab:
+  scale: 1
+runner:
+  scale: 1
+mongo:
+  scale: 1
+rocketchat:
+  scale: 1
+hubot:
+  scale: 1

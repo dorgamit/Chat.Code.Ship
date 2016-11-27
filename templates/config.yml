@@ -1,0 +1,5 @@
+name: Rocket.Chat.Ops
+description: |
+  ChatOps Stack made in Docker with Gitlab-CE, Rocket.Chat and Hubot.
+version: 0.1.0
+category: Chat, Versioning
