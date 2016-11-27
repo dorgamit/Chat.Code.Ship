@@ -77,7 +77,7 @@ hubot:
   image: rocketchat/hubot-rocketchat:latest
   hostname: "${hubot_hostname}"
   environment:
-    - ROCKETCHAT_URL=rocketchat:"${rocketchat_port}"
+    - ROCKETCHAT_URL="${rocketchat_url}:${rocketchat_port}"
     - ROCKETCHAT_ROOM="${hubot_room}"
     - ROCKETCHAT_USER="${hubot_user}"
     - ROCKETCHAT_PASSWORD="${hubot_password}"
