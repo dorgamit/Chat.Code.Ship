@@ -47,7 +47,7 @@ mongo:
 mongo-init-replica:
   image: mongo:3.2
   command: 'mongo mongo/rocketchat --eval "rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})"'
-  restart: never
+  restart: no
   links:
     - mongo:mongo
 

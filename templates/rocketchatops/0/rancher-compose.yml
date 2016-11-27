@@ -134,8 +134,8 @@
       type: string
       required: false
       label: "Hubot Gitlab API Token"
-      description: "API Token from Gitlab to enable bot access"
-      default: "Go to Gitlab, Profile Settings, create a token for hubot and paste it here. Or you can leave this blank and upgrade the container later, to set the GITLAB_TOKEN environment variable."
+      description: "API Token from Gitlab to enable bot access. Go to Gitlab, Profile Settings, create a token for hubot and paste it here. Or you can leave this blank and upgrade the container later, to set the GITLAB_TOKEN environment variable."
+      default: ""
     - variable: "hubot_gitlab_records"
       type: string
       required: false
@@ -156,7 +156,7 @@ runner:
 mongo:
   scale: 1
 mongo-init-replica:
-  restart: never
+  restart: no
 rocketchat:
   scale: 1
 hubot:
