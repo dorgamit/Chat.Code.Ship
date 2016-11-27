@@ -7,11 +7,11 @@ gitlab:
       external_url '${gitlab_external_url}'
       gitlab_rails['gitlab_shell_ssh_port'] = "${gitlab_ssh_port}"
       gitlab_rails['lfs_enabled'] = "${gitlab_lfs_enabled}"
-      nginx['listen_port'] = "${gitlab_listen_port}"
+      nginx['listen_port'] = "${gitlab_http_port}"
   ports:
     - "${gitlab_listen_port}:${gitlab_listen_port}"
-    - "4443:443"
-    - "2222:22"
+    - "${gitlab_ssl_port}:${gitlab_ssl_port}"
+    - "${gitlab_ssh_port}:${gitlab_ssh_port}"
   expose:
     - "4443"
     - "2222"
@@ -76,7 +76,7 @@ hubot:
   image: rocketchat/hubot-rocketchat:latest
   hostname: "${hubot_hostname}"
   environment:
-    - ROCKETCHAT_URL=${rocketchat_url}:${rocketchat_port}
+    - ROCKETCHAT_URL=${rocketchat_hostname}:${rocketchat_port}
     - ROCKETCHAT_ROOM=${hubot_room}
     - ROCKETCHAT_USER=${hubot_user}
     - ROCKETCHAT_PASSWORD=${hubot_password}
@@ -85,7 +85,6 @@ hubot:
     - LISTEN_ON_ALL_PUBLIC=true
     - EXTERNAL_SCRIPTS=${hubot_scripts}
     - GITLAB_URL=http://${gitlab_hostname}:${gitlab_listen_port}/api/v3/
-    - GITLAB_API_KEY="${hubot_gitlab_token}"
     - GITLAB_TOKEN=${hubot_gitlab_token}
     - GITLAB_RECORD_LIMIT=${hubot_gitlab_records}
   links:

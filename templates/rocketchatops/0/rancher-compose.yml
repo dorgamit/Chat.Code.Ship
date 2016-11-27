@@ -15,7 +15,19 @@
       required: true
       label: "Gitlab External URL"
       description: "URL used to access gitlab interface"
-      default: "http://git.dorgam.it"
+      default: "http://git.example.com"
+    - variable: "gitlab_http_port"
+      type: string
+      required: true
+      label: "Gitlab HTTP port"
+      description: "The port where gitlab container will be listening"
+      default: "80"
+    - variable: "gitlab_ssl_port"
+      type: string
+      required: true
+      label: "Gitlab HTTPS (SSL) port"
+      description: "The port where gitlab container will be listening"
+      default: "443"
     - variable: "gitlab_ssh_port"
       type: string
       required: false
@@ -28,12 +40,6 @@
       label: "Gitlab enable LFS"
       description: "Gitlab enable Large File System feature"
       default: true
-    - variable: "gitlab_listen_port"
-      type: string
-      required: true
-      label: "Gitlab HTTP listen port"
-      description: "The port where gitlab container will be listening"
-      default: "8081"
     - variable: "gitlab_volume_path"
       type: string
       required: false
@@ -46,12 +52,6 @@
       label: "Gitlab-CI Runner Hostname"
       description: "Gitlab-CI Runner containers hostname, used to directly communicate containers with each other"
       default: "runner"
-    # - variable: "runner_gitlab_host"
-    #   type: string
-    #   required: false
-    #   label: ""
-    #   description: ""
-    #   default: ""
     - variable: "mongo_hostname"
       type: string
       required: false
@@ -80,14 +80,14 @@
       type: string
       required: false
       label: "Rocket.Chat Port"
-      description: ""
-      default: "3000"
+      description: "Number of the port where Rocket.Chat application will be listening"
+      default: 3000
     - variable: "rocketchat_url"
       type: string
       required: false
       label: "Rocket.Chat External URL"
       description: ""
-      default: "http://chat.dorgam.it"
+      default: "http://chat.domain.com"
     - variable: "rocketchat_mail_url"
       type: string
       required: false
@@ -98,61 +98,55 @@
       type: string
       required: false
       label: "Hubot Hostname"
-      description: ""
+      description: "Hubot's service Hostname"
       default: "hubot"
     - variable: "hubot_room"
       type: string
       required: false
       label: "Hubot Listening Channel"
-      description: ""
-      default: "devops"
+      description: "The room or channel where your bot will be listening."
+      default: "general"
     - variable: "hubot_user"
       type: string
       required: false
       label: "Hubot User"
-      description: ""
+      description: "The user account in Rocket.Chat that hubot will use to listen and respond to messages. Remember creating this user inside Rocket.Chat."
       default: "rocket.cat"
     - variable: "hubot_password"
       type: string
       required: false
       label: "Hubot User password"
-      description: ""
-      default: "1234"
+      description: "The password for the user account in Rocket.Chat that hubot will use to listen and respond to messages."
+      default: 1234
     - variable: "hubot_name"
       type: string
       required: false
       label: "Hubot User Name"
-      description: ""
+      description: "The name of the user account in Rocket.Chat."
       default: "Rocket.Cat"
     - variable: "hubot_scripts"
       type: string
       required: true
       label: "Hubot External Scripts"
-      description: ""
-      default: "hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-gitsy,hubot-gitlab-agile"
-    # - variable: "hubot_gitlab_api_url"
-    #   type: string
-    #   required: true
-    #   label: "Hubot Gitlab API URL"
-    #   description: "API Token from Gitlab to enable bot access"
-    #   default: ""
+      description: "The npm hubot scripts that will be installed once the container load."
+      default: "hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-gitlab-agile"
     - variable: "hubot_gitlab_token"
       type: string
-      required: true
+      required: false
       label: "Hubot Gitlab API Token"
       description: "API Token from Gitlab to enable bot access"
-      default: ""
+      default: "Go to Gitlab, Profile Settings, create a token for hubot and paste it here. Or you can leave this blank and upgrade the container later, to set the GITLAB_TOKEN environment variable."
     - variable: "hubot_gitlab_records"
       type: string
       required: false
       label: "Hubot max records from Gitlab"
-      description: ""
+      description: "The amount of records that hubot-gitlab-agile will read"
       default: "100"
     - variable: "hubot_volume_path"
       type: string
       required: false
       label: "Hubot Volume Path"
-      description: ""
+      description: "The volume path where Hubot will persist its scripts, in case you wanna add something else."
       default: "/home/hubot"
 
 gitlab:
