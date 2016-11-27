@@ -9,15 +9,13 @@ gitlab:
       gitlab_rails['lfs_enabled'] = "${gitlab_lfs_enabled}"
       nginx['listen_port'] = "${gitlab_http_port}"
   ports:
-    - "${gitlab_listen_port}:${gitlab_listen_port}"
+    - "${gitlab_http_port}:${gitlab_http_port}"
     - "${gitlab_ssl_port}:${gitlab_ssl_port}"
     - "${gitlab_ssh_port}:${gitlab_ssh_port}"
   expose:
-    - "4443"
-    - "2222"
-    - "80"
-    - "22"
-    - "443"
+    - "${gitlab_ssh_port}"
+    - "${gitlab_ssl_port}"
+    - "${gitlab_http_port}"
   volumes:
     - "${gitlab_volume_path}/config:/etc/gitlab"
     - "${gitlab_volume_path}/logs:/var/log/gitlab"
