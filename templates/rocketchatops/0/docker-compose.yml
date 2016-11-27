@@ -4,17 +4,15 @@ gitlab:
   hostname: "${gitlab_hostname}"
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url '"${gitlab_external_url}"'
+      external_url '${gitlab_external_url}'
       gitlab_rails['gitlab_shell_ssh_port'] = "${gitlab_ssh_port}"
       gitlab_rails['lfs_enabled'] = "${gitlab_lfs_enabled}"
       nginx['listen_port'] = "${gitlab_listen_port}"
   ports:
-    - "8081:8081"
+    - "${gitlab_listen_port}:${gitlab_listen_port}"
     - "4443:443"
     - "2222:22"
   expose:
-    - "3000"
-    - "8080"
     - "4443"
     - "2222"
     - "80"
@@ -51,6 +49,7 @@ mongo:
 mongo-init-replica:
   image: mongo:3.2
   command: 'mongo mongo/rocketchat --eval "rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})"'
+  restart: never
   links:
     - mongo:mongo
 
@@ -60,8 +59,8 @@ rocketchat:
   volumes:
     - "${rocketchat_volume_path}/uploads:/app/uploads"
   environment:
-    - PORT="${rocketchat_port}"
-    - ROOT_URL="${rocketchat_url}"
+    - PORT=${rocketchat_port}
+    - ROOT_URL=${rocketchat_url}:${rocketchat_port}
     - MONGO_URL=mongodb://mongo:27017/rocketchat
     - MONGO_OPLOG_URL=mongodb://mongo:27017/local
     - MAIL_URL="${rocketchat_mail_url}"
@@ -69,26 +68,26 @@ rocketchat:
     - mongo:mongo
     - gitlab:gitlab
   ports:
-    - 3000:3000
+    - ${rocketchat_port}:${rocketchat_port}
   expose:
-    - "3000"
+    - "${rocketchat_port}"
 
 hubot:
   image: rocketchat/hubot-rocketchat:latest
   hostname: "${hubot_hostname}"
   environment:
-    - ROCKETCHAT_URL="${rocketchat_url}:${rocketchat_port}"
-    - ROCKETCHAT_ROOM="${hubot_room}"
-    - ROCKETCHAT_USER="${hubot_user}"
-    - ROCKETCHAT_PASSWORD="${hubot_password}"
+    - ROCKETCHAT_URL=${rocketchat_url}:${rocketchat_port}
+    - ROCKETCHAT_ROOM=${hubot_room}
+    - ROCKETCHAT_USER=${hubot_user}
+    - ROCKETCHAT_PASSWORD=${hubot_password}
     - ROCKETCHAT_AUTH=password
-    - BOT_NAME="${hubot_name}"
+    - BOT_NAME=${hubot_name}
     - LISTEN_ON_ALL_PUBLIC=true
-    - EXTERNAL_SCRIPTS="${hubot_scripts}" #hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-gitsy,hubot-gitlab-agile
-    - GITLAB_URL="${gitlab_external_url}/api/v3/"
+    - EXTERNAL_SCRIPTS=${hubot_scripts}
+    - GITLAB_URL=http://${gitlab_hostname}:${gitlab_listen_port}/api/v3/
     - GITLAB_API_KEY="${hubot_gitlab_token}"
-    - GITLAB_TOKEN="${hubot_gitlab_token}" #cNhsExCcNhsExicNhsExx
-    - GITLAB_RECORD_LIMIT="${hubot_gitlab_records}" #100
+    - GITLAB_TOKEN=${hubot_gitlab_token}
+    - GITLAB_RECORD_LIMIT=${hubot_gitlab_records}
   links:
     - rocketchat:rocketchat
     - gitlab:gitlab

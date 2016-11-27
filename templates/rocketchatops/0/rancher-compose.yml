@@ -161,6 +161,8 @@ runner:
   scale: 1
 mongo:
   scale: 1
+mongo-init-replica:
+  restart: never
 rocketchat:
   scale: 1
 hubot:
