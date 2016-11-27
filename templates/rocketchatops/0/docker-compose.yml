@@ -21,9 +21,9 @@ gitlab:
     - "22"
     - "443"
   volumes:
-    - "${gitlab_volume_path}/config":/etc/gitlab
-    - "${gitlab_volume_path}/logs":/var/log/gitlab
-    - "${gitlab_volume_path}/data":/var/opt/gitlab
+    - "${gitlab_volume_path}/config:/etc/gitlab"
+    - "${gitlab_volume_path}/logs:/var/log/gitlab"
+    - "${gitlab_volume_path}/data:/var/opt/gitlab"
 
 runner:
   image: gitlab/gitlab-runner:latest
@@ -44,8 +44,8 @@ mongo:
   image: mongo:3.2
   hostname: "${mongo_hostname}"
   volumes:
-   - "${mongo_volume_path}/data":/data/db
-   - "${mongo_volume_path}/dump":/dump
+   - "${mongo_volume_path}/data:/data/db"
+   - "${mongo_volume_path}/dump:/dump"
   command: mongod --smallfiles --oplogSize 128 --replSet rs0
 
 mongo-init-replica:
@@ -58,7 +58,7 @@ rocketchat:
   image: rocketchat/rocket.chat:latest
   hostname: "${rocketchat_hostname}"
   volumes:
-    - "${rocketchat_volume_path}/uploads":/app/uploads
+    - "${rocketchat_volume_path}/uploads:/app/uploads"
   environment:
     - PORT="${rocketchat_port}"
     - ROOT_URL="${rocketchat_url}"
@@ -93,6 +93,6 @@ hubot:
     - rocketchat:rocketchat
     - gitlab:gitlab
   volumes:
-    - "${hubot_volume_path}/scripts":/home/hubot/scripts
+    - "${hubot_volume_path}/scripts:/home/hubot/scripts"
   ports:
     - 3001:3001
