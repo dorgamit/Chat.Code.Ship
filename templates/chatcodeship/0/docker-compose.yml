@@ -81,7 +81,7 @@ hubot:
     - BOT_NAME=${hubot_name}
     - LISTEN_ON_ALL_PUBLIC=true
     - EXTERNAL_SCRIPTS=${hubot_scripts}
-    - GITLAB_URL=http://${gitlab_hostname}:${gitlab_listen_port}/api/v3/
+    - GITLAB_URL=http://${gitlab_hostname}:${gitlab_http_port}/api/v3/
     - GITLAB_TOKEN=${hubot_gitlab_token}
     - GITLAB_RECORD_LIMIT=${hubot_gitlab_records}
   links:
