@@ -20,9 +20,9 @@ gitlab:
     - "${gitlab_volume_path}/config:/etc/gitlab"
     - "${gitlab_volume_path}/logs:/var/log/gitlab"
     - "${gitlab_volume_path}/data:/var/opt/gitlab"
-
+#TODO: Verificar a documentação para registrar o runner com essa imagem
 runner:
-  image: gitlab/gitlab-runner:latest
+  image: djx339/gitlab-docker-runner:latest
   hostname: "${runner_hostname}"
   restart: "always"
   volumes:
