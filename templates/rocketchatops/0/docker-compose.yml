@@ -1,0 +1,94 @@
+gitlab:
+  image: 'gitlab/gitlab-ce:latest'
+  restart: always
+  hostname: "${gitlab_hostname}"
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url '${gitlab_external_url}'
+      gitlab_rails['gitlab_shell_ssh_port'] = "${gitlab_ssh_port}"
+      gitlab_rails['lfs_enabled'] = "${gitlab_lfs_enabled}"
+      nginx['listen_port'] = "${gitlab_http_port}"
+  ports:
+    - "${gitlab_http_port}:${gitlab_http_port}"
+    - "${gitlab_ssl_port}:${gitlab_ssl_port}"
+    - "${gitlab_ssh_port}:${gitlab_ssh_port}"
+  expose:
+    - "${gitlab_ssh_port}"
+    - "${gitlab_ssl_port}"
+    - "${gitlab_http_port}"
+  volumes:
+    - "${gitlab_volume_path}/config:/etc/gitlab"
+    - "${gitlab_volume_path}/logs:/var/log/gitlab"
+    - "${gitlab_volume_path}/data:/var/opt/gitlab"
+#TODO: Verificar a documentação para registrar o runner com essa imagem
+runner:
+  image: djx339/gitlab-docker-runner:latest
+  hostname: "${runner_hostname}"
+  restart: "always"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - gitlab
+  environment:
+    - GITLAB_HOST="${gitlab_hostname}:${gitlab_listen_port}"
+  ports:
+    - "8000:8000"
+  expose:
+    - "8000"
+
+mongo:
+  image: mongo:3.2
+  hostname: "${mongo_hostname}"
+  volumes:
+   - "${mongo_volume_path}/data:/data/db"
+   - "${mongo_volume_path}/dump:/dump"
+  command: mongod --smallfiles --oplogSize 128 --replSet rs0
+
+mongo-init-replica:
+  image: mongo:3.2
+  command: 'mongo mongo/rocketchat --eval "rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})"'
+  restart: no
+  links:
+    - mongo:mongo
+
+rocketchat:
+  image: rocketchat/rocket.chat:latest
+  hostname: "${rocketchat_hostname}"
+  volumes:
+    - "${rocketchat_volume_path}/uploads:/app/uploads"
+  environment:
+    - PORT=${rocketchat_port}
+    - ROOT_URL=${rocketchat_url}:${rocketchat_port}
+    - MONGO_URL=mongodb://mongo:27017/rocketchat
+    - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+    - MAIL_URL="${rocketchat_mail_url}"
+  links:
+    - mongo:mongo
+    - gitlab:gitlab
+  ports:
+    - ${rocketchat_port}:${rocketchat_port}
+  expose:
+    - "${rocketchat_port}"
+
+hubot:
+  image: rocketchat/hubot-rocketchat:latest
+  hostname: "${hubot_hostname}"
+  environment:
+    - ROCKETCHAT_URL=${rocketchat_hostname}:${rocketchat_port}
+    - ROCKETCHAT_ROOM=${hubot_room}
+    - ROCKETCHAT_USER=${hubot_user}
+    - ROCKETCHAT_PASSWORD=${hubot_password}
+    - ROCKETCHAT_AUTH=password
+    - BOT_NAME=${hubot_name}
+    - LISTEN_ON_ALL_PUBLIC=true
+    - EXTERNAL_SCRIPTS=${hubot_scripts}
+    - GITLAB_URL=http://${gitlab_hostname}:${gitlab_listen_port}/api/v3/
+    - GITLAB_TOKEN=${hubot_gitlab_token}
+    - GITLAB_RECORD_LIMIT=${hubot_gitlab_records}
+  links:
+    - rocketchat:rocketchat
+    - gitlab:gitlab
+  volumes:
+    - "${hubot_volume_path}/scripts:/home/hubot/scripts"
+  ports:
+    - 3001:3001

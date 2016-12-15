@@ -129,7 +129,7 @@
       required: true
       label: "Hubot External Scripts"
       description: "The npm hubot scripts that will be installed once the container load."
-      default: "hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-gitlab-agile"
+      default: "hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-rocketchat-gitlab"
     - variable: "hubot_gitlab_token"
       type: string
       required: false
@@ -140,7 +140,7 @@
       type: string
       required: false
       label: "Hubot max records from Gitlab"
-      description: "The amount of records that hubot-gitlab-agile will read"
+      description: "The amount of records that hubot-rocketchat-gitlab will read"
       default: "100"
     - variable: "hubot_volume_path"
       type: string
